@@ -1400,6 +1400,29 @@ struct coap_pending *coap_pending_next_to_expire(
 	return found;
 }
 
+struct coap_observer *coap_observer_next_to_expire(
+	struct coap_observer *observers, size_t len)
+{
+	struct coap_observer *p, *found = NULL;
+	size_t i;
+	uint32_t expiry, min_expiry;
+
+	for (i = 0, p = observers; i < len; i++, p++) {
+		if (!p->timeout) {
+			continue;
+		}
+
+		expiry = p->t0 + p->timeout;
+
+		if (!found || (int32_t)(expiry - min_expiry) < 0) {
+			min_expiry = expiry;
+			found = p;
+		}
+	}
+
+	return found;
+}
+
 static uint32_t init_ack_timeout(void)
 {
 #if defined(CONFIG_COAP_RANDOMIZE_ACK_TIMEOUT)
@@ -1415,6 +1438,11 @@ static uint32_t init_ack_timeout(void)
 #else
 	return CONFIG_COAP_INIT_ACK_TIMEOUT_MS;
 #endif /* defined(CONFIG_COAP_RANDOMIZE_ACK_TIMEOUT) */
+}
+
+static uint32_t init_lt_timeout(void)
+{
+	return CONFIG_COAP_INIT_LT_TIMEOUT_MS;
 }
 
 bool coap_pending_cycle(struct coap_pending *pending)
@@ -1569,6 +1597,13 @@ void coap_observer_init(struct coap_observer *observer,
 			const struct sockaddr *addr)
 {
 	observer->tkl = coap_header_get_token(request, observer->token);
+	observer->t0 = k_uptime_get_32();
+	int opt = coap_get_option_int(request, COAP_OPTION_LIFETIME);
+	if (opt <= 0) {
+		observer->timeout = init_lt_timeout();
+	} else {
+		observer->timeout = opt * 1000U;
+	}
 
 	net_ipaddr_copy(&observer->addr, addr);
 }

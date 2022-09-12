@@ -42,25 +42,26 @@ extern "C" {
  * Refer to RFC 7252, section 12.2 for more information.
  */
 enum coap_option_num {
-	COAP_OPTION_IF_MATCH = 1,
-	COAP_OPTION_URI_HOST = 3,
-	COAP_OPTION_ETAG = 4,
-	COAP_OPTION_IF_NONE_MATCH = 5,
-	COAP_OPTION_OBSERVE = 6,
-	COAP_OPTION_URI_PORT = 7,
-	COAP_OPTION_LOCATION_PATH = 8,
-	COAP_OPTION_URI_PATH = 11,
-	COAP_OPTION_CONTENT_FORMAT = 12,
-	COAP_OPTION_MAX_AGE = 14,
-	COAP_OPTION_URI_QUERY = 15,
-	COAP_OPTION_ACCEPT = 17,
-	COAP_OPTION_LOCATION_QUERY = 20,
-	COAP_OPTION_BLOCK2 = 23,
-	COAP_OPTION_BLOCK1 = 27,
-	COAP_OPTION_SIZE2 = 28,
-	COAP_OPTION_PROXY_URI = 35,
-	COAP_OPTION_PROXY_SCHEME = 39,
-	COAP_OPTION_SIZE1 = 60,
+	COAP_OPTION_IF_MATCH = 1,        /**< If-Match */
+	COAP_OPTION_URI_HOST = 3,        /**< Uri-Host */
+	COAP_OPTION_ETAG = 4,            /**< ETag */
+	COAP_OPTION_IF_NONE_MATCH = 5,   /**< If-None-Match */
+	COAP_OPTION_OBSERVE = 6,         /**< Observe (RFC 7641) */
+	COAP_OPTION_URI_PORT = 7,        /**< Uri-Port */
+	COAP_OPTION_LOCATION_PATH = 8,   /**< Location-Path */
+	COAP_OPTION_LIFETIME = 10,       /**< Lifetime observer */
+	COAP_OPTION_URI_PATH = 11,       /**< Uri-Path */
+	COAP_OPTION_CONTENT_FORMAT = 12, /**< Content-Format */
+	COAP_OPTION_MAX_AGE = 14,        /**< Max-Age */
+	COAP_OPTION_URI_QUERY = 15,      /**< Uri-Query */
+	COAP_OPTION_ACCEPT = 17,         /**< Accept */
+	COAP_OPTION_LOCATION_QUERY = 20, /**< Location-Query */
+	COAP_OPTION_BLOCK2 = 23,         /**< Block2 (RFC 7959) */
+	COAP_OPTION_BLOCK1 = 27,         /**< Block1 (RFC 7959) */
+	COAP_OPTION_SIZE2 = 28,          /**< Size2 (RFC 7959) */
+	COAP_OPTION_PROXY_URI = 35,      /**< Proxy-Uri */
+	COAP_OPTION_PROXY_SCHEME = 39,   /**< Proxy-Scheme */
+	COAP_OPTION_SIZE1 = 60           /**< Size1 */
 };
 
 /**
@@ -227,6 +228,8 @@ struct coap_observer {
 	struct sockaddr addr;
 	uint8_t token[8];
 	uint8_t tkl;
+	uint32_t t0;
+	uint32_t timeout;
 };
 
 /**
@@ -868,6 +871,9 @@ struct coap_reply *coap_response_received(
  */
 struct coap_pending *coap_pending_next_to_expire(
 	struct coap_pending *pendings, size_t len);
+
+struct coap_observer *coap_observer_next_to_expire(
+	struct coap_observer *observers, size_t len);
 
 /**
  * @brief After a request is sent, user may want to cycle the pending
