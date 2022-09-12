@@ -49,6 +49,7 @@ enum coap_option_num {
 	COAP_OPTION_OBSERVE = 6,
 	COAP_OPTION_URI_PORT = 7,
 	COAP_OPTION_LOCATION_PATH = 8,
+	COAP_OPTION_LIFETIME = 10,
 	COAP_OPTION_URI_PATH = 11,
 	COAP_OPTION_CONTENT_FORMAT = 12,
 	COAP_OPTION_MAX_AGE = 14,
@@ -219,6 +220,8 @@ struct coap_observer {
 	struct sockaddr addr;
 	uint8_t token[8];
 	uint8_t tkl;
+	uint32_t t0;
+	uint32_t timeout;
 };
 
 /**
@@ -814,6 +817,9 @@ struct coap_reply *coap_response_received(
  */
 struct coap_pending *coap_pending_next_to_expire(
 	struct coap_pending *pendings, size_t len);
+
+struct coap_observer *coap_observer_next_to_expire(
+	struct coap_observer *observers, size_t len);
 
 /**
  * @brief After a request is sent, user may want to cycle the pending

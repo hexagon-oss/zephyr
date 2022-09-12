@@ -59,6 +59,14 @@ config COAP_INIT_ACK_TIMEOUT_MS
 	help
 	  This value is used as a base value to retry pending CoAP packets.
 
+config COAP_INIT_LT_TIMEOUT_MS
+	int "default lifetime of an observer in ms"
+	default 60000
+	range 1000 120000
+	help
+	  This value is used as default lifetime of an observer. If lifetime
+	  option is missing or is zero this lifetime is applied.
+
 config COAP_RANDOMIZE_ACK_TIMEOUT
 	bool "Randomize initial ACK timeout, as specified in RFC 7252"
 	default y
