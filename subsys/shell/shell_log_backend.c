@@ -161,7 +161,8 @@ static void process_log_msg(const struct shell *sh,
 	uint32_t flags = LOG_OUTPUT_FLAG_LEVEL |
 		      LOG_OUTPUT_FLAG_TIMESTAMP |
 		      (IS_ENABLED(CONFIG_SHELL_LOG_FORMAT_TIMESTAMP) ?
-			LOG_OUTPUT_FLAG_FORMAT_TIMESTAMP : 0);
+			(LOG_OUTPUT_FLAG_FORMAT_TIMESTAMP |
+			 LOG_OUTPUT_FLAG_FORMAT_SYSLOG) : 0);
 
 	if (colors) {
 		flags |= LOG_OUTPUT_FLAG_COLORS;
