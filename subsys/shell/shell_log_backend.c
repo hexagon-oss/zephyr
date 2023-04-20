@@ -142,7 +142,8 @@ static void msg_process(const struct log_output *log_output,
 {
 	uint32_t flags = LOG_OUTPUT_FLAG_LEVEL |
 		      LOG_OUTPUT_FLAG_TIMESTAMP |
-		      LOG_OUTPUT_FLAG_FORMAT_TIMESTAMP;
+		      LOG_OUTPUT_FLAG_FORMAT_TIMESTAMP |
+			  LOG_OUTPUT_FLAG_FORMAT_SYSLOG;
 
 	if (colors) {
 		flags |= LOG_OUTPUT_FLAG_COLORS;
@@ -231,7 +232,8 @@ static void put_sync_string(const struct log_backend *const backend,
 	uint32_t key;
 	uint32_t flags = LOG_OUTPUT_FLAG_LEVEL |
 		      LOG_OUTPUT_FLAG_TIMESTAMP |
-		      LOG_OUTPUT_FLAG_FORMAT_TIMESTAMP;
+		      LOG_OUTPUT_FLAG_FORMAT_TIMESTAMP |
+			  LOG_OUTPUT_FLAG_FORMAT_SYSLOG;
 
 	if (IS_ENABLED(CONFIG_SHELL_VT100_COLORS)) {
 		flags |= LOG_OUTPUT_FLAG_COLORS;
@@ -258,7 +260,8 @@ static void put_sync_hexdump(const struct log_backend *const backend,
 	uint32_t key;
 	uint32_t flags = LOG_OUTPUT_FLAG_LEVEL |
 		      LOG_OUTPUT_FLAG_TIMESTAMP |
-		      LOG_OUTPUT_FLAG_FORMAT_TIMESTAMP;
+		      LOG_OUTPUT_FLAG_FORMAT_TIMESTAMP |
+			  LOG_OUTPUT_FLAG_FORMAT_SYSLOG;
 
 	if (IS_ENABLED(CONFIG_SHELL_VT100_COLORS)) {
 		flags |= LOG_OUTPUT_FLAG_COLORS;
@@ -361,7 +364,8 @@ static void process_log_msg2(const struct shell *shell,
 	unsigned int key;
 	uint32_t flags = LOG_OUTPUT_FLAG_LEVEL |
 		      LOG_OUTPUT_FLAG_TIMESTAMP |
-		      LOG_OUTPUT_FLAG_FORMAT_TIMESTAMP;
+		      LOG_OUTPUT_FLAG_FORMAT_TIMESTAMP |
+			  LOG_OUTPUT_FLAG_FORMAT_SYSLOG;
 
 	if (colors) {
 		flags |= LOG_OUTPUT_FLAG_COLORS;
