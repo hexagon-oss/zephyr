@@ -235,7 +235,6 @@ static int timestamp_print(const struct log_output *output,
 		uint32_t hours;
 		uint32_t mins;
 		uint32_t ms;
-		uint32_t us;
 
 		timestamp /= timestamp_div;
 		total_seconds = timestamp / freq;
@@ -247,7 +246,6 @@ static int timestamp_print(const struct log_output *output,
 
 		remainder = timestamp % freq;
 		ms = (remainder * 1000U) / freq;
-		us = (1000 * (remainder * 1000U - (ms * freq))) / freq;
 
 		if (flags & LOG_OUTPUT_FLAG_FORMAT_SYSLOG) {
 #if defined(CONFIG_NEWLIB_LIBC)
@@ -260,27 +258,27 @@ static int timestamp_print(const struct log_output *output,
 
 			strftime(time_str, sizeof(time_str), "%FT%T", tm);
 
-			length = print_formatted(output, "%s.%06uZ ",
-						 time_str, ms * 1000U + us);
+			length = print_formatted(output, "%s.%03uZ ",
+						 time_str, ms);
 #else
 			struct YMD_date date;
 
 			get_YMD_from_seconds(total_seconds, &date);
 			hours = hours % 24;
 			length = print_formatted(output,
-					"%04u-%02u-%02uT%02u:%02u:%02u.%06uZ ",
+					"%04u-%02u-%02uT%02u:%02u:%02u.%03uZ ",
 					date.year, date.month, date.day,
-					hours, mins, seconds, ms * 1000U + us);
+					hours, mins, seconds, ms);
 #endif
 		} else {
 			if (IS_ENABLED(CONFIG_LOG_OUTPUT_FORMAT_LINUX_TIMESTAMP)) {
 				length = print_formatted(output,
-							"[%5ld.%06d] ",
-							total_seconds, ms * 1000U + us);
+							"[%5ld.%03d] ",
+							total_seconds, ms);
 			} else {
 				length = print_formatted(output,
 							"[%02u:%02u:%02u.%03u,%03u] ",
-							hours, mins, seconds, ms, us);
+							hours, mins, seconds, ms, 0);
 			}
 		}
 	} else {
