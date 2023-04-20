@@ -263,8 +263,7 @@ static int timestamp_print(const struct log_output *output,
 		ms = (remainder * 1000U) / freq;
 		us = (1000 * (remainder * 1000U - (ms * freq))) / freq;
 
-		if (IS_ENABLED(CONFIG_LOG_BACKEND_NET) &&
-		    flags & LOG_OUTPUT_FLAG_FORMAT_SYSLOG) {
+		if (flags & LOG_OUTPUT_FLAG_FORMAT_SYSLOG) {
 #if defined(CONFIG_NEWLIB_LIBC)
 			char time_str[sizeof("1970-01-01T00:00:00")];
 			struct tm *tm;
